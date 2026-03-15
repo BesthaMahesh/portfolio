@@ -7,13 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors()); // Temporarily allow all origins to fix the "Something went wrong" error
 app.use(express.json());
+
+// Log every request to help debug
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url} received`);
+  next();
+});
 
 // ── Portfolio Data ──────────────────────────────────────────────────────────
 const portfolioData = {
