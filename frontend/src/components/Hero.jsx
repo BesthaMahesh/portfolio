@@ -79,7 +79,7 @@ export default function Hero() {
           {/* Stats */}
           <div className="hero__stats fade-f">
             {[
-              { to: 3, dec: 0, label: "Projects Live" },
+              { to: 4, dec: 0, label: "Projects Live" },
               { to: 3, dec: 0, label: "certs" },
               { to: 8.08, dec: 2, label: "CGPA" },
             ].map((s) => (
