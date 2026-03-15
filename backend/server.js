@@ -1,23 +1,28 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
 const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-app.options('*', cors()); // Enable pre-flight for all routes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-requested-with");
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // Log every request to help debug
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url} received`);
+  console.log(`${req.method} ${req.url} received from ${req.headers.origin || "unknown"}`);
   next();
 });
 
@@ -169,19 +174,6 @@ app.get("/api/portfolio", (req, res) => {
   res.json({ success: true, data: portfolioData });
 });
 
-// Get specific sections
-app.get("/api/portfolio/projects", (req, res) => {
-  res.json({ success: true, data: portfolioData.projects });
-});
-
-app.get("/api/portfolio/skills", (req, res) => {
-  res.json({ success: true, data: portfolioData.skills });
-});
-
-app.get("/api/portfolio/certifications", (req, res) => {
-  res.json({ success: true, data: portfolioData.certifications });
-});
-
 // Contact form handler
 app.post("/api/contact", async (req, res) => {
   const { name, email, subject, message } = req.body;
@@ -226,7 +218,6 @@ app.post("/api/contact", async (req, res) => {
 });
 
 // ── Start Server ─────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 Portfolio API running at http://localhost:${PORT}`);
-  console.log(`📋 Try: GET http://localhost:${PORT}/api/portfolio`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Portfolio API running on port ${PORT}`);
 });
