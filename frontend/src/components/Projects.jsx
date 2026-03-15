@@ -30,12 +30,13 @@ const PROJECTS = [
     empty: false
   },
   {
-    title: "Upcoming Project",
-    badge: "Planned",
-    desc: "Exploring new horizons in machine learning and web integration. Stay tuned for updates on this box.",
-    role: "TBD",
-    pattern: "Ideation",
-    empty: true
+    title: "VisionTalk — AI Multi-modal Chatbot",
+    badge: "Vision AI",
+    desc: "A sophisticated multi-modal chatbot capable of vision-based analysis, image processing, and natural language interaction.",
+    role: "AI Multi-modal",
+    pattern: "Vision Awareness",
+    url: "https://vision-talk-ai-chatbot.vercel.app/",
+    empty: false
   }
 ];
 

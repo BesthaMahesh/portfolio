@@ -68,6 +68,21 @@ const portfolioData = {
       tech: ["React.js", "Node.js", "Express", "MongoDB", "AI Toolkit"],
       category: "Full-Stack AI",
     },
+    {
+      id: 4,
+      title: "VisionTalk – AI Multi-modal Chatbot",
+      url: "https://vision-talk-ai-chatbot.vercel.app/",
+      description:
+        "A sophisticated multi-modal AI chatbot capable of processing image inputs and engaging in natural language conversations with advanced vision awareness.",
+      highlights: [
+        "Multi-modal AI with Vision capabilities",
+        "Image-to-text analysis integration",
+        "Real-time conversational interface",
+        "Built with React and advanced AI APIs",
+      ],
+      tech: ["React.js", "AI Vision APIs", "Tailwind CSS", "Vite"],
+      category: "AI / Multi-modal",
+    },
   ],
 
   skills: {
