@@ -56,7 +56,7 @@ export default function Hero() {
             </button>
             <a
               className="btn-blue"
-              href="/BESTHA_MAHESH_BABU.pdf"
+              href="/bmaheshresume.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >
