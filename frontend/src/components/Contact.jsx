@@ -15,7 +15,11 @@ export default function Contact() {
     e.preventDefault();
     setSt("sending");
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      let apiUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000").trim();
+      if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1); // Remove trailing slash
+      
+      console.log("🚀 Calling API at:", `${apiUrl}/api/contact`);
+      
       const response = await fetch(`${apiUrl}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
