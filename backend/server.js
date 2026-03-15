@@ -1,38 +1,23 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
 const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 1. LOW LEVEL MANUAL CORS HEADERS (The "Bulletproof" way)
+// 1. GLOBAL CORS HEADERS (Forced)
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   
-  // Allow any origin that sends a request
-  res.setHeader("Access-Control-Allow-Origin", origin || "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Accept");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  
-  // Handle the 'preflight' Browser check (the OPTIONS request)
-  if (req.method === "OPTIONS") {
-    console.log(`✅ Preflight (OPTIONS) success for: ${origin}`);
-    return res.status(204).end();
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
   }
   next();
 });
 
-// 2. SECONDARY CORS MIDDLEWARE (Safeguard)
-app.use(cors());
 app.use(express.json());
-
-// Log for debugging
-app.use((req, res, next) => {
-  console.log(`[${new Date().toLocaleTimeString()}] ${req.method} ${req.url} received`);
-  next();
-});
 
 // ── Portfolio Data ──────────────────────────────────────────────────────────
 const portfolioData = {
@@ -54,16 +39,22 @@ const portfolioData = {
 
 // ── Routes ──────────────────────────────────────────────────────────────────
 
+// Home route
+app.get("/", (req, res) => res.json({ status: "OK", message: "Portfolio Backend is Live!" }));
+
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Portfolio API is running 🚀" });
 });
 
-app.get("/api/portfolio", (req, res) => {
-  res.json({ success: true, data: portfolioData });
+// GET contact (to prevent "Cannot GET" error)
+app.get("/api/contact", (req, res) => {
+  res.json({ message: "Please use POST to send messages." });
 });
 
+// POST contact (Main functionality)
 app.post("/api/contact", async (req, res) => {
-  console.log("📨 Contact Request Body:", req.body);
+  console.log("📨 Received form:", req.body);
   const { name, email, subject, message } = req.body;
 
   if (!name || !email || !message) {
@@ -83,23 +74,17 @@ app.post("/api/contact", async (req, res) => {
       from: email,
       to: "maheshbabu02456@gmail.com",
       subject: `Portfolio: ${subject || "New Message"}`,
-      html: `
-        <h3>Message from ${name} (${email})</h3>
-        <p><strong>Subject:</strong> ${subject || "N/A"}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `,
+      html: `<h3>New message from ${name} (${email})</h3><p>${message}</p>`,
     });
 
-    console.log("✅ Email sent successfully");
-    res.json({ success: true, message: "Message sent!" });
+    res.json({ success: true, message: "Message sent successfully!" });
   } catch (error) {
-    console.error("❌ Email failed:", error.message);
-    res.status(500).json({ success: false, error: error.message });
+    console.error("❌ Send fail:", error.message);
+    res.status(500).json({ success: false, error: "Server could not send email." });
   }
 });
 
 // ── Start Server ─────────────────────────────────────────────────────────────
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server fully operational on port ${PORT}`);
+  console.log(`🚀 Server on port ${PORT}`);
 });
