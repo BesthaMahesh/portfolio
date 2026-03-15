@@ -63,7 +63,9 @@ app.post("/api/contact", async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Use TLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -73,14 +75,19 @@ app.post("/api/contact", async (req, res) => {
     await transporter.sendMail({
       from: email,
       to: "maheshbabu02456@gmail.com",
-      subject: `Portfolio: ${subject || "New Message"}`,
-      html: `<h3>New message from ${name} (${email})</h3><p>${message}</p>`,
+      subject: `Portfolio Contact from ${name}`,
+      html: `
+        <h3>Message from ${name} (${email})</h3>
+        <p><strong>Subject:</strong> ${subject || "N/A"}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `,
     });
 
-    res.json({ success: true, message: "Message sent successfully!" });
+    res.json({ success: true, message: "Message sent!" });
   } catch (error) {
     console.error("❌ Send fail:", error.message);
-    res.status(500).json({ success: false, error: "Server could not send email." });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
