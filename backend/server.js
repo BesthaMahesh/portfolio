@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // 1. GLOBAL CORS HEADERS (Forced)
 app.use((req, res, next) => {
@@ -19,14 +20,18 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+// Log every request to help debug
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} received`);
+  next();
+});
+
 // ── Portfolio Data ──────────────────────────────────────────────────────────
 const portfolioData = {
   personal: {
     name: "Bestha Mahesh Babu",
     title: "AI & Full-Stack Developer",
     email: "maheshbabu02456@gmail.com",
-    phone: "8179208780",
-    linkedin: "https://linkedin.com/in/mahesh-bestha-354232303",
     summary: "AI and Full-Stack developer building intelligent web applications.",
   },
   projects: [
@@ -39,12 +44,14 @@ const portfolioData = {
 
 // ── Routes ──────────────────────────────────────────────────────────────────
 
-// Home route
 app.get("/", (req, res) => res.json({ status: "OK", message: "Portfolio Backend is Live!" }));
 
-// Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Portfolio API is running 🚀" });
+});
+
+app.get("/api/portfolio", (req, res) => {
+  res.json({ success: true, data: portfolioData });
 });
 
 // GET contact (to prevent "Cannot GET" error)
@@ -52,9 +59,8 @@ app.get("/api/contact", (req, res) => {
   res.json({ message: "Please use POST to send messages." });
 });
 
-// POST contact (Main functionality)
+// POST contact (Main functionality using RESEND API)
 app.post("/api/contact", async (req, res) => {
-  console.log("📨 Received form:", req.body);
   const { name, email, subject, message } = req.body;
 
   if (!name || !email || !message) {
@@ -62,37 +68,27 @@ app.post("/api/contact", async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // Use SSL for port 465
-      pool: true,   // Keep the connection alive
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      debug: true,  // Show full handshake in Render logs
-      logger: true  // Log to console
-    });
-
-    await transporter.sendMail({
-      from: email,
-      to: "maheshbabu02456@gmail.com",
-      subject: `Portfolio Contact from ${name}`,
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Default sender for free accounts
+      to: 'maheshbabu02456@gmail.com',
+      subject: `Portfolio: ${subject || "New Message"}`,
       html: `
         <h3>Message from ${name} (${email})</h3>
-        <p><strong>Subject:</strong> ${subject || "N/A"}</p>
         <p><strong>Message:</strong></p>
         <p>${message}</p>
       `,
     });
 
-    res.json({ success: true, message: "Message sent!" });
-  } catch (error) {
-    console.error("❌ Send fail:", error.message);
-    res.status(500).json({ success: false, error: error.message });
+    if (error) {
+      console.error("❌ Resend Error:", error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+
+    console.log("✅ Email sent via Resend:", data.id);
+    res.json({ success: true, message: "Message sent successfully!" });
+  } catch (err) {
+    console.error("❌ Server Error:", err.message);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
