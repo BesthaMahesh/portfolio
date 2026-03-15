@@ -1,0 +1,28 @@
+.marquee-section {
+  padding: 36px 0;
+  background: var(--bg1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.marquee-text {
+  font-family: var(--fm);
+  font-size: 13px;
+  color: var(--txt2);
+  padding: 0 14px;
+  white-space: nowrap;
+  transition: color .25s;
+}
+.marquee-text:hover { color: var(--indigo); }
+.marquee-dot {
+  font-size: 8px;
+  color: var(--indigo);
+  opacity: .35;
+}
