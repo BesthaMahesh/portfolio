@@ -55,6 +55,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([INITIAL_MESSAGE]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
+  const [isOpen, setIsOpen]     = useState(false);
   const messagesRef = useRef(null);
   const inputRef  = useRef(null);
 
@@ -135,7 +136,7 @@ export default function Chatbot() {
   return (
     <div className="cb-container" onClick={(e) => e.stopPropagation()}>
       {/* Robot Icon sitting above */}
-      <div className="cb-robot">
+      <div className="cb-robot" onClick={() => setIsOpen(!isOpen)} style={{ cursor: "pointer" }}>
         <div className="cb-robot-head">
           <div className="cb-robot-eyes">
             <span className="cb-eye"></span>
@@ -144,7 +145,7 @@ export default function Chatbot() {
         </div>
       </div>
 
-      <div className="cb-panel">
+      <div className={`cb-panel ${isOpen ? "open" : ""}`}>
         {/* Header */}
         <div className="cb-header">
           <p className="cb-header-title">Ask about me</p>
