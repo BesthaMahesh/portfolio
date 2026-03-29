@@ -152,3 +152,9 @@ body::after{
 @media(max-width:520px){
   .three-col{grid-template-columns:1fr !important}
 }
+@media(max-width:480px){
+  .sec{padding:50px 0}
+  .wrap{padding:0 16px}
+  .sh-title{font-size:clamp(28px, 9vw, 36px)}
+  .card{border-radius:16px}
+}

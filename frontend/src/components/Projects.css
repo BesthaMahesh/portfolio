@@ -133,10 +133,14 @@
 
 @media (max-width: 640px) {
   .proj-card {
-    padding: 30px;
+    padding: 24px;
+    gap: 24px;
   }
   .proj-card__footer {
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
+  }
+  .proj-card__title {
+    font-size: 20px;
   }
 }

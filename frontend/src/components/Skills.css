@@ -67,5 +67,7 @@
 
 @media (max-width: 600px) {
   .skills-grid { grid-template-columns: 1fr; }
-  .sk-card { padding: 24px 28px; }
+  .sk-card { padding: 24px 20px; }
+  .sk-card__head { flex-direction: column; text-align: center; gap: 8px; }
+  .sk-card__items { align-items: center; }
 }

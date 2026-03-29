@@ -159,6 +159,10 @@
 }
 
 @media (max-width: 500px) {
-  .cert { padding: 16px 20px; }
+  .cert { padding: 16px 20px; flex-direction: column; text-align: center; gap: 12px; }
   .cert__badge { width: 44px; height: 44px; font-size: 10px; }
+  .cert__check { position: absolute; top: 16px; right: 16px; }
+  .cert { position: relative; }
+  .edu { padding: 24px 20px; text-align: center; }
+  .edu__gpa { align-self: center; margin-top: 16px; }
 }

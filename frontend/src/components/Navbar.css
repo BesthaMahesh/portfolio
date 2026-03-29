@@ -190,5 +190,15 @@
   .nav__links, .nav__right { display: none; }
   .nav__burger              { display: flex; }
   .nav__mobile              { display: flex; }
-  .nav__in                  { gap: 0; }
+  .nav__in                  { gap: 0; justify-content: space-between; }
+}
+
+@media (max-width: 480px) {
+  .nav { padding: 12px 0; }
+  .nav.solid { padding: 8px 0; }
+  .nav__logo-m { font-size: 24px; }
+  .nav__logo-rest { font-size: 18px; }
+  .nav__burger span { width: 26px; height: 2px; }
+  .nav__mob-link { text-align: center; font-size: 18px; padding: 14px 16px; }
+  .nav__mob-cta { font-size: 16px; padding: 14px 16px; }
 }

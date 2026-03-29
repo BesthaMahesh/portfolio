@@ -249,11 +249,17 @@
   .hero { padding-top: 80px; }
   .hero__scroll { display: none; }
   .hero__stats  { gap: 32px; }
-  .hero__name { font-size: clamp(40px, 12vw, 72px); }
+  .hero__name { font-size: clamp(36px, 12vw, 64px); }
+  .hero__identity { flex-direction: column; text-align: center; gap: 16px; margin-bottom: 20px; }
+  .hero__monogram { margin: 0 auto; }
 }
 
 @media (max-width: 480px) {
-  .hero__actions { flex-direction: column; width: 100%; }
-  .hero__socials { margin-left: 0; width: 100%; justify-content: center; }
-  .hero__stat-val { font-size: 36px; }
+  .hero__actions { flex-direction: column; width: 100%; align-items: stretch; gap: 12px; }
+  .hero__actions .btn-blue, .hero__actions .btn-o { width: 100%; justify-content: center; }
+  .hero__socials { margin-left: 0; width: 100%; justify-content: center; margin-top: 8px; }
+  .hero__stats { gap: 24px; flex-direction: column; align-items: center; }
+  .hero__stat-val { font-size: 32px; }
+  .hero__name { font-size: clamp(32px, 10vw, 42px); }
+  .hero__bio { font-size: 15px; }
 }
